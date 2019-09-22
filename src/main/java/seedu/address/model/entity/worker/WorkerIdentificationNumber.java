@@ -1,4 +1,4 @@
-package seedu.address.model.entity.body;
+package seedu.address.model.entity.worker;
 
 import static java.util.Objects.requireNonNull;
 import static seedu.address.commons.util.AppUtil.checkArgument;
@@ -8,15 +8,14 @@ import java.util.regex.Pattern;
 
 //@@author ambervoong
 /**
- *  Represents a body's identification number in Mortago.
+ *  Represents a worker's identification number in Mortago.
  */
-public class BodyIdentificationNumber {
-
-    public static final String VALID_ID = "A valid body identification number has a length of 9, "
-            + "starts with 'B', which is followed by 8 digits.";
+public class WorkerIdentificationNumber {
+    public static final String VALID_ID = "A valid worker identification number has a length of 6, "
+            + "starts with 'W', which is followed by 5 digits.";
     private final String identificationNumber;
 
-    public BodyIdentificationNumber(String identificationNumber) {
+    public WorkerIdentificationNumber(String identificationNumber) {
         requireNonNull(identificationNumber);
         checkArgument(isValidIdentificationNumber(identificationNumber), VALID_ID);
         this.identificationNumber = identificationNumber;
@@ -34,7 +33,7 @@ public class BodyIdentificationNumber {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        BodyIdentificationNumber that = (BodyIdentificationNumber) o;
+        WorkerIdentificationNumber that = (WorkerIdentificationNumber) o;
         return getIdentificationNumber().equals(that.getIdentificationNumber());
     }
 
@@ -45,25 +44,24 @@ public class BodyIdentificationNumber {
 
     /**
      * Checks if a given string is a valid body identification number. A valid body identification number has a
-     * length of 9, starts with 'B', which is followed by 8 digits.
-     * @param identificationNumber String that represents a given body identification number.
-     * @return true if the string is a valid body identification number, false otherwise.
+     * length of 6, starts with 'W', which is followed by 5 digits.
+     * @param identificationNumber String that represents a given worker identification number.
+     * @return true if the string is a valid worker identification number, false otherwise.
      */
     public static boolean isValidIdentificationNumber(String identificationNumber) {
-        if (identificationNumber.length() != 9) {
+        if (identificationNumber.length() != 6) {
             return false;
         }
 
         String digits = identificationNumber.substring(1);
 
-        boolean isStartB = identificationNumber.charAt(0) == 'B';
-        boolean isEightLength = digits.length() == 8;
+        boolean isStartB = identificationNumber.charAt(0) == 'W';
+        boolean isFiveLength = digits.length() == 5;
 
         String regex = "\\d+";
         Pattern pattern = Pattern.compile(regex);
         boolean isDigits = (pattern.matcher(digits).matches());
 
-        return isStartB && isEightLength && isDigits;
+        return isStartB && isFiveLength && isDigits;
     }
-
 }
