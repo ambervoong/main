@@ -20,6 +20,7 @@ import seedu.address.model.entity.body.Body;
 import seedu.address.model.notif.Notif;
 import seedu.address.storage.Storage;
 import seedu.address.ui.NotifWindow;
+import seedu.address.ui.NotificationButton;
 
 //@@author arjavibahety
 
@@ -117,10 +118,14 @@ public class NotifCommand extends Command {
                         model.addNotif(notif);
                     }
                     storageManager.saveAddressBook(model.getAddressBook());
+
                 } catch (CommandException | IOException e) {
                     logger.info("Error updating the body and fridge ");
                 }
             }
+
+            NotificationButton.getInstance(model.getFilteredActiveNotifList())
+                    .updateNotifCount(model.getNumberOfActiveNotifs());
         });
         ses.schedule(changeUi, period, timeUnit);
     }

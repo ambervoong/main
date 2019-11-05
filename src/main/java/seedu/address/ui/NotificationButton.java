@@ -110,5 +110,8 @@ public class NotificationButton extends UiPart<Region> {
         buttonPane.getChildren().addAll(iconNumber);
     }
 
+    public void updateNotifCount(int num) {
+        iconNumber.setText(num + "");
+    }
 }
 //@@ author
