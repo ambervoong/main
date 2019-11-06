@@ -355,6 +355,13 @@ public class UpdateCommand extends UndoableCommand {
                 if (isUpdatedFromNotif) {
                     findNotifAndDelete(model, body);
                 }
+
+                // Readd Notifs
+                if (body.getBodyStatus().equals(Optional.of(ARRIVED))
+                        && !((UpdateBodyDescriptor) updateEntityDescriptor).getBodyStatus()
+                        .equals(Optional.of(ARRIVED))) {
+                    reAddNotificationsForBody(model, body);
+                }
             }
         } catch (NullPointerException e) {
             throw new CommandException(MESSAGE_ENTITY_NOT_FOUND);
@@ -362,6 +369,17 @@ public class UpdateCommand extends UndoableCommand {
         setRedoable();
         model.addUndoneCommand(this);
         return new CommandResult(String.format(MESSAGE_UNDO_SUCCESS, entity));
+    }
+
+    /**
+     * Re-adds notification for a body.
+     *
+     * @param model refers to the AddressBook model.
+     * @throws CommandException if NotifCommand could not be executed.
+     */
+    private void reAddNotificationsForBody(Model model, Body body) throws CommandException {
+        NotifCommand notifCommand = new NotifCommand(new Notif(body), NOTIF_PERIOD, NOTIF_TIME_UNIT);
+        notifCommand.execute(model);
     }
 
     /**
@@ -383,6 +401,8 @@ public class UpdateCommand extends UndoableCommand {
         for (Notif notif : autoNotif) {
             model.deleteNotif(notif);
         }
+
+
     }
 
     public void setUpdateFromNotif(boolean isUpdatedFromNotif) {

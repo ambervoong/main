@@ -1,7 +1,10 @@
 package seedu.address.logic.commands;
 
 import static java.util.Objects.requireNonNull;
+import static seedu.address.logic.commands.AddCommand.NOTIF_PERIOD;
+import static seedu.address.logic.commands.AddCommand.NOTIF_TIME_UNIT;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_FLAG;
+import static seedu.address.model.entity.body.BodyStatus.ARRIVED;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -168,6 +171,15 @@ public class DeleteCommand extends UndoableCommand {
             for (Notif notif : notifList) {
                 model.addNotif(notif);
             }
+
+            // Readd Notifs
+            if (entityToDelete instanceof Body) {
+                Body body = (Body) entityToDelete;
+                if (body.getBodyStatus().equals(Optional.of(ARRIVED))) {
+                    reAddNotificationsForBody(model, body);
+                }
+            }
+
         } catch (NullPointerException e) {
             throw new CommandException(MESSAGE_ENTITY_NOT_FOUND);
         }
@@ -178,6 +190,17 @@ public class DeleteCommand extends UndoableCommand {
         return new CommandResult(String.format(MESSAGE_UNDO_SUCCESS, entityToDelete));
     }
     //@@author
+
+    /**
+     * Re-adds notification for a body.
+     *
+     * @param model refers to the AddressBook model.
+     * @throws CommandException if NotifCommand could not be executed.
+     */
+    private void reAddNotificationsForBody(Model model, Body body) throws CommandException {
+        NotifCommand notifCommand = new NotifCommand(new Notif(body), NOTIF_PERIOD, NOTIF_TIME_UNIT);
+        notifCommand.execute(model);
+    }
 
     @Override
     public boolean equals (Object other) {
